@@ -26,23 +26,42 @@ def tea_decrypt(block, key):
         sum_ = (sum_ - delta) & 0xFFFFFFFF
     return struct.pack("!2I", v0, v1)
 
+# def add_padding(data):
+#     pad_len = 8 - (len(data) % 8)
+#     return data + b'\x00' * pad_len
+
+# def remove_padding(data):
+#     pad_len = 0
+#     for byte in reversed(data):
+#         if byte == 0:
+#             pad_len += 1
+#         else:
+#             break
+#     return data[:-pad_len] if pad_len > 0 else data
+
+"""PROPER WAY"""
 def add_padding(data):
     pad_len = 8 - (len(data) % 8)
-    return data + b'\x00' * pad_len
+    if pad_len == 0:
+        pad_len = 8
+    return data + bytes([pad_len] * pad_len)
 
 def remove_padding(data):
-    pad_len = 0
-    for byte in reversed(data):
-        if byte == 0:
-            pad_len += 1
-        else:
-            break
-    return data[:-pad_len] if pad_len > 0 else data
+    if not data:
+        raise ValueError("Data is empty, cannot remove padding")
+    pad_len = data[-1]
+    if pad_len < 1 or pad_len > 8:
+        raise ValueError("Invalid padding length")
+    if data[-pad_len:] != bytes([pad_len] * pad_len):
+        raise ValueError("Invalid padding content")
+    return data[:-pad_len]
 
 def encrypt_file(input_file, output_file, key):
     with open(input_file, 'rb') as f_in, open(output_file, 'wb') as f_out:
         plaintext = f_in.read()
+        print(f"{plaintext=}")
         padded_data = add_padding(plaintext) # выравнимаем данные до 8 байт
+        print(f"{padded_data=}")
         for i in range(0, len(padded_data), 8):
             block = padded_data[i:i + 8]
             encrypted_block = tea_encrypt(block, key)
@@ -59,13 +78,20 @@ def decrypt_file(input_file, output_file, key):
             decrypted_block = tea_decrypt(block, key)
             decrypted_data += decrypted_block
 
+        print(f"{decrypted_data=}")
+
         try:
             unpadded_data = remove_padding(decrypted_data)
+            print(f"{unpadded_data=}")
         except ValueError as e:
             raise ValueError(f"Cannot remove padding: {e}")
 
         f_out.write(unpadded_data)
 
 key = os.urandom(16)
+# write \x00 to file
+with open('input.txt', 'wb') as f:
+    f.write(b'Hello' + b'\x00' * 3)
+
 encrypt_file("input.txt", "encrypted.bin", key)
 decrypt_file("encrypted.bin", "decrypted.txt", key)

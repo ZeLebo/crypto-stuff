@@ -23,6 +23,7 @@ def embed_message(image_path, text, output_path):
     binary_message += '00000000'  # null-byte
 
     width, height = img.size
+    print(f"{width=} {height=}")
     total_pixels = width * height
 
     if len(binary_message) > total_pixels * 3:
@@ -73,6 +74,6 @@ assert extracted == message, "Messages are different"
 print(extracted)
 
 try:
-    embed_message(input_path, message * 100_000, output_path)
+    embed_message(input_path, message * 25_000, output_path)
 except ValueError as e:
     print(e)

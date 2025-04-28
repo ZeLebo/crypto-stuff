@@ -78,4 +78,4 @@ def compare_methods(a, b, p):
     print(f"Метод Шэнкса: x = {x1}, умножений = {mul1}, время = {baby_end - baby_start:.6f} сек")
     print(f"Полный перебор: x = {x2}, умножений = {mul2}, время = {brute_force_end - brute_force_start:.6f} сек")
 
-compare_methods(a=5, b=45, p=97)
+compare_methods(a=79, b=122, p=263)
