@@ -59,10 +59,10 @@ def main():
     for node, neighbours in trust_graph_network.items():
         print(f"{node} -> {neighbours}")
         
-    initial = "c"
+    initial = "a"
     print(f"chain from {initial} to z")
 
-    chain = build_chain(initial, "z", trust_graph_network)
+    chain = build_chain("z", initial, trust_graph_network)
     if chain:
         print(" -> ".join(chain))
     else:

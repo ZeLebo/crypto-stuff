@@ -1,6 +1,7 @@
 from ellipticcurve import EllipticCurve
 from finitefieldgroup import FiniteFieldGroup
 
+
 def main():
     # --- Часть 1 & 2: Группа остатков по модулю (умножение) ---
     print("\n" + "="*80)

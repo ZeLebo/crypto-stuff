@@ -58,11 +58,6 @@ def hierarcial_run():
     else:
         print("Chain not found")
 
-    from PrettyPrint import PrettyPrintTree
-
-    pt = PrettyPrintTree(lambda x: x.assignee, lambda x: x.owner)
-    pt(certificates)
-
 
 if __name__ == "__main__":
     hierarcial_run()
