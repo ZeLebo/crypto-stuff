@@ -1,7 +1,8 @@
-import hmac_algo
-import secrets
 import binascii
+import secrets
 import time
+
+import hmac_algo
 
 SHARED_KEY = hmac_algo.SECRET_KEY
 
@@ -108,3 +109,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# %% Cell
+print("hello")
