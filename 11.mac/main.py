@@ -73,7 +73,7 @@ def mim():
 
     # Злоумышленник изменяет сообщение
     msg_attack = "Command: Delete all data".encode('utf-8')
-    # Злоумышленник не знает ключа, поэтому отправляет СТАРЫЙ MAC
+    # Злоумышленник не знает ключа, поэтому отправляет СТАРЫЙ mac
     packet_2_attack = (msg_attack, nonce_orig, tag_orig)
 
     print(f"[M]: Message changed to : '{msg_attack.decode()}'")
@@ -109,7 +109,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-# %% Cell
-print("hello")

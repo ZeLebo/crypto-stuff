@@ -1,5 +1,6 @@
 from PrettyPrint import PrettyPrintTree
 
+
 class Certificate:
     def __init__(self, owner, issuer, is_root=False):
         self.owner = owner
@@ -10,14 +11,14 @@ class Certificate:
     def __repr__(self):
         return self.owner
 
-# Ваша функция build_chain
+
 def build_chain(target_owner, certificates_map) -> list:
     """
     Build a chain of certificates from the target owner to the root
 
     :param target_owner: owner for whom the chain is built
     :param certificates_map: dictionary of certificates {owner: certificate_object}
-    
+
     :return chain of certificates to the root from owner, None if not found
     """
 
@@ -30,15 +31,17 @@ def build_chain(target_owner, certificates_map) -> list:
 
         if cert.is_root:
             return chain[::-1]
-        
+
         else:
             current_owner = cert.issuer
             if current_owner not in certificates_map:
-                print(f"Certificate for issuer '{current_owner}' not found (chain for '{target_owner}' is broken).")
+                print(f"Certificate for issuer '{
+                      current_owner}' not found (chain for '{target_owner}' is broken).")
                 return None
 
-    print (f"Target owner '{target_owner}' not found in the certificates map.")
+    print(f"Target owner '{target_owner}' not found in the certificates map.")
     return None
+
 
 class PKINode:
     def __init__(self, certificate):
@@ -54,6 +57,7 @@ class PKINode:
     def add_child(self, child_node):
         self.children.append(child_node)
 
+
 def build_pki_tree(certificates_map):
     """
     Строит древовидную структуру PKI из плоского словаря сертификатов.
@@ -68,9 +72,11 @@ def build_pki_tree(certificates_map):
         elif node.certificate.issuer in nodes:
             nodes[node.certificate.issuer].add_child(node)
         else:
-            print(f"Warning: Issuer '{node.certificate.issuer}' for '{node.certificate.owner}' not found in the system. Node will not be part of the main tree.")
+            print(f"Warning: Issuer '{node.certificate.issuer}' for '{
+                  node.certificate.owner}' not found in the system. Node will not be part of the main tree.")
 
     return root_node
+
 
 def hierarcial_run():
     print("--- Иерархическая PKI ---")
@@ -108,7 +114,8 @@ def hierarcial_run():
     pki_tree_root = build_pki_tree(certificates_map)
 
     if pki_tree_root:
-        pt = PrettyPrintTree(lambda x: x.get_children(), lambda x: x.get_value())
+        pt = PrettyPrintTree(lambda x: x.get_children(),
+                             lambda x: x.get_value())
         pt(pki_tree_root)
     else:
         print("Не удалось построить корневой узел для визуализации PKI.")

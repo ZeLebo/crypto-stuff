@@ -2,6 +2,7 @@
 Эллиптическая точка
 """
 
+
 class ECPoint:
     def __init__(self, x, y, is_infinity=False):
         self.x = x
@@ -16,17 +17,17 @@ class ECPoint:
         if self.is_infinity != other.is_infinity:
             return False
         return self.x == other.x and self.y == other.y
-    
+
     def __neg__(self):
         if self.is_infinity:
             return ECPoint(None, None, True)
         return ECPoint(self.x, -self.y)
-    
+
     def __repr__(self):
         if self.is_infinity:
             return "(X, X)"
         return f"({self.x}, {self.y})"
-    
+
     def __hash__(self):
         if self.is_infinity:
             return hash((None, None, True))

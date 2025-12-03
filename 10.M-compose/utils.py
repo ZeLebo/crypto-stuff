@@ -1,12 +1,14 @@
 from math import sqrt
 
+
 def is_prime(n):
     if n < 2:
-        return False 
+        return False
     for i in range(2, int(sqrt(n)) + 1):
         if n % i == 0:
             return False
     return True
+
 
 def extended_gcd(a, b):
     if a == 0:
@@ -15,6 +17,7 @@ def extended_gcd(a, b):
     x = y1 - (b // a) * x1
     y = x1
     return gcd, x, y
+
 
 def mod_inverse(a, m):
     gcd, x, y = extended_gcd(a, m)
