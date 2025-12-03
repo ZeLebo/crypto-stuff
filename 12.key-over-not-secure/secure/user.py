@@ -7,7 +7,6 @@ class User:
         self.name = name
         self.P, self.G = get_public_params()
 
-        # DH parameters
         self.private_exponent = generate_secret_exponent(self.P)
         self.public_key_dh = self._calculate_public_key_dh()
         self.shared_secret = None
@@ -40,7 +39,6 @@ class User:
 
     def sign_dh_key(self):
         """Signs the DH public key using the long-term private key."""
-        # The DH public key is the message being signed
         return sign_message(self.private_key_sign, str(self.public_key_dh))
 
     def __str__(self):

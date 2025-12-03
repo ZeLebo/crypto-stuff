@@ -1,5 +1,9 @@
 from user import User
 from utils import get_public_params, display_table
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 
 class DiffieHellmanSimulator:
@@ -9,14 +13,14 @@ class DiffieHellmanSimulator:
 
     # Sets up users, generates keys, and displays the parameter table
     def setup_system(self, N):
-        print(f"--- DH SYSTEM SETUP ({N} users) ---")
+        logger.info(f"--- DH SYSTEM SETUP ({N} users) ---")
 
         self.users = {f"A{i+1}": User(f"A{i+1}") for i in range(N)}
 
-        print("System Public Parameters:")
-        print(f"  Modulus P = {self.P}")
-        print(f"  Generator G = {self.G}")
-        print("-" * 30)
+        logger.info("System Public Parameters:")
+        logger.info(f"  Modulus P = {self.P}")
+        logger.info(f"  Generator G = {self.G}")
+        logger.info("-" * 30)
 
         user_data = [user.get_user_data() for user in self.users.values()]
         display_table(user_data, "Generated Keys and Parameters")
@@ -28,41 +32,43 @@ class DiffieHellmanSimulator:
         B = self.users.get(name_B)
 
         if not A or not B:
-            print("Error: One or both subscribers do not exist.")
+            logger.info("Error: One or both subscribers do not exist.")
             return
 
-        print(f"\n--- DH KEY EXCHANGE PROTOCOL: {name_A} <-> {name_B} ---")
+        logger.info(
+            f"\n--- DH KEY EXCHANGE PROTOCOL: {name_A} <-> {name_B} ---")
 
-        print(f"1. {name_A} (Secret a={
-              A.private_exponent}) calculates public key A = G^a mod P:")
-        print(f"   A = {self.G}^{A.private_exponent} mod {
-              self.P} = {A.public_key}")
-        print(f"   {name_A} sends {A.public_key} to {name_B}")
+        logger.info(f"1. {name_A} (Secret a={
+            A.private_exponent}) calculates public key A = G^a mod P:")
+        logger.info(f"   A = {self.G}^{A.private_exponent} mod {
+            self.P} = {A.public_key}")
+        logger.info(f"   {name_A} sends {A.public_key} to {name_B}")
 
-        print(f"2. {name_B} (Secret b={
-              B.private_exponent}) calculates public key B = G^b mod P:")
-        print(f"   B = {self.G}^{B.private_exponent} mod {
-              self.P} = {B.public_key}")
-        print(f"   {name_B} sends {B.public_key} to {name_A}")
+        logger.info(f"2. {name_B} (Secret b={
+            B.private_exponent}) calculates public key B = G^b mod P:")
+        logger.info(f"   B = {self.G}^{B.private_exponent} mod {
+            self.P} = {B.public_key}")
+        logger.info(f"   {name_B} sends {B.public_key} to {name_A}")
 
         K_A = A.calculate_shared_secret(B.public_key)
-        print(f"\n3. {name_A} receives {
-              B.public_key} and calculates the shared secret K_A:")
-        print(f"   K_A = B^a mod P = {B.public_key}^{
-              A.private_exponent} mod {self.P} = {K_A}")
+        logger.info(f"\n3. {name_A} receives {
+            B.public_key} and calculates the shared secret K_A:")
+        logger.info(f"   K_A = B^a mod P = {B.public_key}^{
+            A.private_exponent} mod {self.P} = {K_A}")
 
         K_B = B.calculate_shared_secret(A.public_key)
-        print(f"4. {name_B} receives {
-              A.public_key} and calculates the shared secret K_B:")
-        print(f"   K_B = A^b mod P = {A.public_key}^{
-              B.private_exponent} mod {self.P} = {K_B}")
+        logger.info(f"4. {name_B} receives {
+            A.public_key} and calculates the shared secret K_B:")
+        logger.info(f"   K_B = A^b mod P = {A.public_key}^{
+            B.private_exponent} mod {self.P} = {K_B}")
 
-        print("\n=======================================================")
+        logger.info(
+            "\n=======================================================")
         if K_A == K_B:
-            print(f"SUCCESS: Shared secret key K_AB = {K_A}")
+            logger.info(f"SUCCESS: Shared secret key K_AB = {K_A}")
         else:
-            print("FAILURE: Keys do not match.")
-        print("=======================================================")
+            logger.info("FAILURE: Keys do not match.")
+        logger.info("=======================================================")
 
 
 def main():
@@ -74,17 +80,17 @@ def main():
             if N >= 2:
                 break
             else:
-                print("Please enter a number >= 2.")
+                logger.info("Please enter a number >= 2.")
         except ValueError:
-            print("Invalid input. Try again.")
+            logger.info("Invalid input. Try again.")
 
     simulator.setup_system(N)
     user_list = list(simulator.users.keys())
 
     while True:
-        print("\n--- Menu ---")
-        print(f"Available users: {', '.join(user_list)}")
-        print("Enter 'exit' to terminate.")
+        logger.info("\n--- Menu ---")
+        logger.info(f"Available users: {', '.join(user_list)}")
+        logger.info("Enter 'exit' to terminate.")
 
         selection = input(
             "Select two subscribers for key exchange (example: A1,A3): ").strip()
@@ -94,19 +100,20 @@ def main():
 
         try:
             if ',' not in selection:
-                print("Invalid format. Use a comma (example: A1,A2).")
+                logger.info("Invalid format. Use a comma (example: A1,A2).")
                 continue
 
             A_name, B_name = [name.strip() for name in selection.split(',')]
 
             if A_name not in user_list or B_name not in user_list or A_name == B_name:
-                print("Invalid selection or identical subscribers. Try again.")
+                logger.info(
+                    "Invalid selection or identical subscribers. Try again.")
                 continue
 
             simulator.run_exchange(A_name, B_name)
 
         except Exception as e:
-            print(f"An error occurred during the exchange: {e}")
+            logger.info(f"An error occurred during the exchange: {e}")
 
 
 if __name__ == '__main__':
