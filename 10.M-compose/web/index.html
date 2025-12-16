@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finite Fields & Elliptic Curves Playground</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Interactive algebra visualizer</p>
+        <h1>Play with finite fields and elliptic curves</h1>
+        <p class="lede">Enter small primes to see multiplication tables, element orders, and point composition on short Weierstrass curves.</p>
+      </div>
+      <div class="hint">Tip: start with P = 7 for both demos.</div>
+    </header>
+
+    <main class="grid">
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Part 1</p>
+            <h2>Group of units modulo P</h2>
+          </div>
+          <button id="computeField" class="primary">Compute</button>
+        </div>
+        <form id="fieldForm" class="controls" onsubmit="return false;">
+          <label>
+            Prime P
+            <input type="number" id="fieldPrime" min="3" value="7" required>
+          </label>
+        </form>
+        <div class="results">
+          <div class="result-block">
+            <div class="result-title">Multiplication table for Z<span class="superscript">*</span><sub>P</sub></div>
+            <div id="multiplicationTable" class="table-scroll placeholder">Waiting for input…</div>
+          </div>
+          <div class="result-block">
+            <div class="result-title">Element orders &amp; generators</div>
+            <div id="orderTable" class="table-scroll placeholder">Waiting for input…</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <p class="eyebrow">Part 2</p>
+            <h2>Elliptic curve over F<sub>P</sub></h2>
+          </div>
+          <button id="computeCurve" class="primary">Compute</button>
+        </div>
+        <form id="curveForm" class="controls" onsubmit="return false;">
+          <label>
+            Curve parameter A
+            <input type="number" id="curveA" value="1" required>
+          </label>
+          <label>
+            Curve parameter B
+            <input type="number" id="curveB" value="3" required>
+          </label>
+          <label>
+            Prime P
+            <input type="number" id="curveP" min="3" value="7" required>
+          </label>
+        </form>
+        <div class="results">
+          <div class="result-block">
+            <div class="result-title">Points on the curve</div>
+            <div id="pointsList" class="chips placeholder">Waiting for input…</div>
+          </div>
+          <div class="result-block">
+            <div class="result-title">Curve grid (discrete plot)</div>
+            <canvas id="curveCanvas" class="curve-canvas" width="520" height="320"></canvas>
+            <div class="curve-meta">
+              <label class="switch">
+                <input type="checkbox" id="toggleBackdrop" checked>
+                <span class="slider"></span>
+                <span class="switch-text">Show smooth real-curve overlay</span>
+              </label>
+              <div id="pointStatus" class="point-status meta-status">Click a point to highlight it.</div>
+            </div>
+          </div>
+          <div class="result-block">
+            <div class="result-title">M-fold compositions (scalar multiples)</div>
+            <div id="generatorTable" class="table-scroll placeholder">Waiting for input…</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

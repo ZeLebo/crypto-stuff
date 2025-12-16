@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>PKI Explorer</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+  <div id="app" class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">PKI Toolkit</p>
+        <h1>Certificate map</h1>
+        <p class="lede">Shape and explore your CA hierarchy or network with a live, interactive graph.</p>
+      </div>
+      <div class="hero-actions">
+        <label class="select">
+          Structure
+          <select v-model="structure">
+            <option value="hierarchy">Hierarchy</option>
+            <option value="network">Network</option>
+          </select>
+        </label>
+        <label class="select">
+          Layout
+          <select v-model="layout">
+            <option value="force">Force</option>
+            <option value="tree" :disabled="structure !== 'hierarchy'">Tree</option>
+          </select>
+        </label>
+        <button class="ghost" @click="resetSample">Reset sample</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel control-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Builder</p>
+            <h2>Create nodes</h2>
+          </div>
+          <div class="pill">{{ nodes.length }} nodes • {{ links.length }} links</div>
+        </div>
+
+        <div class="form-grid">
+          <label>
+            Node id
+            <input v-model="newNode.id" placeholder="e.g. Intermediate C" @keyup.enter="addNode">
+          </label>
+          <label>
+            Parent
+            <select v-model="newNode.parent">
+              <option value="">(none)</option>
+              <option v-for="p in parentOptions" :key="p" :value="p">{{ p }}</option>
+            </select>
+          </label>
+        </div>
+        <button class="primary full" @click="addNode">Add node</button>
+
+        <div class="divider"></div>
+
+        <div class="panel-header tight">
+          <div>
+            <p class="eyebrow">Selection</p>
+            <h3 v-if="selectedNode">Editing {{ selectedNode.id }}</h3>
+            <h3 v-else>Pick a node to edit</h3>
+          </div>
+          <div class="chip-group" v-if="selectedNode">
+            <span class="chip" :class="selectedNode.type">{{ selectedNode.type }}</span>
+          </div>
+        </div>
+
+        <p v-if="!selectedNode" class="muted">Click a node in the graph to see its details.</p>
+        <template v-else>
+          <label>
+            Subject
+            <textarea rows="3" v-model="editSubject" placeholder="CN=example.com" @keyup.enter.prevent="changeSubject"></textarea>
+          </label>
+          <label>
+            Parent
+            <select v-model="editParent" @change="updateParent">
+              <option value="">(none)</option>
+              <option v-for="p in parentOptions" :key="p" :value="p" :disabled="p === selectedNode.id">{{ p }}</option>
+            </select>
+          </label>
+          <label v-if="structure === 'network'">
+            Path target
+            <select v-model="targetId">
+              <option value="">(choose node)</option>
+              <option v-for="p in parentOptions" :key="p" :value="p" :disabled="p === selectedNode.id">{{ p }}</option>
+            </select>
+          </label>
+          <div class="button-row">
+            <button class="primary" @click="changeSubject">Save subject</button>
+            <button class="ghost" @click="deleteSelected">Delete</button>
+            <button class="ghost" @click="checkConnectivity">{{ structure === 'hierarchy' ? 'Check root' : 'Find path' }}</button>
+          </div>
+          <p v-if="checkResult" class="status" :class="checkResultState">
+            {{ checkResult }}
+          </p>
+        </template>
+      </section>
+
+      <section class="panel graph-panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Graph</p>
+            <h2>Live visualization</h2>
+          </div>
+        </div>
+        <svg id="graph"></svg>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="core.js"></script>
+</body>
+</html>

@@ -1,43 +1,41 @@
-from ellipticcurve import EllipticCurve
-from finitefieldgroup import FiniteFieldGroup
+from core.ellipticcurve import EllipticCurve
+from core.finitefieldgroup import FiniteFieldGroup
 
 
 def main():
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("--- ЧАСТЬ 1 & 2: ГРУППА ОСТАТКОВ ПО МОДУЛЮ (УМНОЖЕНИЕ) ---")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
-    P_input = int(
-        input("Введите простое число P для группы остатков (например, 7): "))
+    P_input = int(input("Введите простое число P для группы остатков (например, 7): "))
     try:
         group = FiniteFieldGroup(P_input)
-        print("\n" + "-"*50)
+        print("\n" + "-" * 50)
         group.print_multiplication_table()
-        print("\n" + "-"*50)
+        print("\n" + "-" * 50)
         group.print_element_orders_table()
     except ValueError as e:
         print(f"Ошибка: {e}")
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("--- ЧАСТЬ 3: ЭЛЛИПТИЧЕСКИЕ КРИВЫЕ ---")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     EC_P = 7
     EC_A = 1
     EC_B = 3
-    print(
-        f"Используем эллиптическую кривую Y^2 = X^3 + {EC_A}X + {EC_B} mod {EC_P}")
+    print(f"Используем эллиптическую кривую Y^2 = X^3 + {EC_A}X + {EC_B} mod {EC_P}")
 
     try:
         curve = EllipticCurve(EC_A, EC_B, EC_P)
 
-        print("\n" + "-"*50)
+        print("\n" + "-" * 50)
         curve.print_group_addition_table()
 
-        print("\n" + "-"*50)
+        print("\n" + "-" * 50)
         curve.print_generator_table()
 
-        print("\n" + "-"*50)
+        print("\n" + "-" * 50)
         print("--- Тестирование M-кратной композиции (scalar_multiply) ---")
         points_on_curve = curve.find_all_points()
         if len(points_on_curve) > 1:
@@ -54,5 +52,5 @@ def main():
         print(f"Ошибка при инициализации эллиптической кривой: {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

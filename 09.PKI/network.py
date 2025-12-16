@@ -1,5 +1,5 @@
-from certificate import Certificate
 from collections import deque
+
 
 def build_chain(start_node, end_node, trust_graph):
     """
@@ -12,7 +12,7 @@ def build_chain(start_node, end_node, trust_graph):
 
     if start_node == end_node:
         return [start_node]
-    
+
     parent = {}
     visited = set()
     queue = deque()
@@ -20,7 +20,6 @@ def build_chain(start_node, end_node, trust_graph):
     queue.append(start_node)
     visited.add(start_node)
     parent[start_node] = None
-
 
     # BFS
     while queue:
@@ -42,6 +41,7 @@ def build_chain(start_node, end_node, trust_graph):
 
     return None
 
+
 def main():
     print("Сетевая PKI")
 
@@ -52,13 +52,13 @@ def main():
         "d": ["c", "z"],
         "x": ["b"],
         "y": ["c"],
-        "z": ["d"]
+        "z": ["d"],
     }
-    
+
     print("graph doveriya")
     for node, neighbours in trust_graph_network.items():
         print(f"{node} -> {neighbours}")
-        
+
     initial = "a"
     print(f"chain from {initial} to z")
 

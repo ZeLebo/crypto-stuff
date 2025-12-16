@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторная: Распределение ключей</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Криптография • Демонстрация</p>
+        <h1>Diffie‑Hellman: обмен и подмена сообщений</h1>
+        <p class="lede">Кликайте по абонентам, просматривайте их публичные ключи, проводите обмен ключами и запускайте сценарий подмены через прокси.</p>
+      </div>
+      <div class="tag">p <span>&</span> g</div>
+    </header>
+
+    <main class="grid">
+      <section class="panel">
+        <div class="panel__header">
+          <div>
+            <p class="eyebrow">Обзор</p>
+            <h2>Круг абонентов</h2>
+          </div>
+          <div class="stat">
+            <span>Публичные параметры</span>
+            <div id="public-params" class="mono"></div>
+          </div>
+        </div>
+        <div class="controls">
+          <label class="field inline">
+            <span>Количество абонентов</span>
+            <input id="user-count" type="number" min="2" max="16" value="6">
+          </label>
+          <button id="apply-count" class="ghost-btn" type="button">Пересоздать</button>
+        </div>
+        <div id="circle" class="circle"></div>
+        <div id="selected-user" class="selected"></div>
+        <div id="key-table" class="table"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel__header">
+          <div>
+            <p class="eyebrow">Обмен</p>
+            <h2>Ключ и сообщение</h2>
+          </div>
+          <button id="regenerate" class="ghost-btn" type="button">Обновить ключи</button>
+        </div>
+
+        <div class="form">
+          <label class="field">
+            <span>Отправитель</span>
+            <select id="sender"></select>
+          </label>
+          <label class="field">
+            <span>Получатель</span>
+            <select id="receiver"></select>
+          </label>
+          <label class="field">
+            <span>Сообщение</span>
+            <textarea id="message" rows="3" placeholder="Например: Секретная встреча в 18:00"></textarea>
+          </label>
+          <button id="run-exchange" class="primary-btn" type="button">Выполнить обмен и отправить</button>
+        </div>
+
+        <div id="exchange-log" class="log block"></div>
+        <div id="wire-preview" class="wire"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel__header">
+          <div>
+            <p class="eyebrow">Атака</p>
+            <h2>Интерактивная подмена</h2>
+          </div>
+          <div class="stat">
+            <span>Атакующий</span>
+            <div class="mono">Mallory (вы)</div>
+          </div>
+        </div>
+
+        <p class="lede small">Перехватите сообщение, расшифруйте его, отредактируйте и зашифруйте заново своим ключом. Журналы покажут, что получил адресат.</p>
+
+        <div class="form two-col">
+          <label class="field">
+            <span>Жертвы</span>
+            <select id="mitm-pair"></select>
+          </label>
+          <label class="field">
+            <span>Текст жертвы</span>
+            <input id="mitm-message" type="text" value="Пароль от сейфа: 12345">
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="run-mitm" class="accent-btn" type="button">Перехватить</button>
+          <button id="reveal-mitm" class="ghost-btn" type="button">Расшифровать</button>
+          <button id="forward-mitm" class="primary-btn" type="button">Изменить и отправить</button>
+        </div>
+
+        <div id="mitm-edit" class="form hidden">
+          <label class="field">
+            <span>Текст после подмены</span>
+            <textarea id="mitm-forged" rows="2"></textarea>
+          </label>
+        </div>
+
+        <div id="mitm-timeline" class="timeline"></div>
+        <div id="mitm-log" class="log block"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./scripts/main.js"></script>
+</body>
+</html>

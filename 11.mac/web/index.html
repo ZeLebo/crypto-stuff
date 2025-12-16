@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMAC Channel Demo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-left">
+      <p class="eyebrow">Message Authentication Codes</p>
+      <h1>HMAC channel demo</h1>
+      <p class="lead">Три сценария передачи: честная доставка, атака «Man in the Middle» и повторная отправка пакета. Вся криптография реализована вручную на HMAC-SHA256.</p>
+      <div class="key-box">
+        <div>
+          <p class="label">Shared secret</p>
+          <p id="sharedKey" class="mono small"></p>
+        </div>
+        <button id="resetKey" class="ghost">Новый ключ</button>
+      </div>
+    </div>
+    <div class="hero-card">
+      <p class="label">Что происходит</p>
+      <ul>
+        <li>Создаем MAC = SHA256((K ⊕ opad) ∥ SHA256((K ⊕ ipad) ∥ msg∥nonce))</li>
+        <li>Nonce гарантирует уникальность сообщения и защищает от replay</li>
+        <li>Проверяем MAC и повторное использование Nonce на стороне получателя</li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <div class="view-controls">
+      <button class="ghost" id="focusToggle">Режим фокуса: выкл</button>
+      <p class="tiny">В фокусе выбранный сценарий занимает всю ширину. Клик по карточке переключает.</p>
+    </div>
+    <section class="grid">
+      <article class="card" data-scenario="fair">
+        <div class="card-head">
+      <p class="eyebrow">Сценарий 1</p>
+      <h2>Честная передача</h2>
+      <p class="small">Отправитель и получатель согласованы, MAC сходится.</p>
+    </div>
+    <div class="sequence dual" data-sequence="fair">
+      <div class="node" data-actor="A">A<br><span>Sender</span></div>
+      <div class="flow"></div>
+      <div class="node" data-actor="B">B<br><span>Receiver</span></div>
+    </div>
+        <div class="card-actions">
+          <button class="primary" data-action="run" data-target="fair">Запустить</button>
+        </div>
+        <div class="log" id="log-fair"></div>
+      </article>
+
+      <article class="card" data-scenario="mitm">
+        <div class="card-head">
+          <p class="eyebrow">Сценарий 2</p>
+          <h2>Man in the Middle</h2>
+          <p class="small">Сообщение подменено, MAC не совпадает.</p>
+        </div>
+        <div class="sequence" data-sequence="mitm">
+          <div class="node" data-actor="A">A<br><span>Sender</span></div>
+          <div class="flow"></div>
+          <div class="node" data-actor="M">M<br><span>MitM</span></div>
+          <div class="flow"></div>
+          <div class="node" data-actor="B">B<br><span>Receiver</span></div>
+        </div>
+        <div class="card-actions">
+          <button class="primary" data-action="run" data-target="mitm">Запустить</button>
+        </div>
+        <div class="log" id="log-mitm"></div>
+      </article>
+
+      <article class="card" data-scenario="replay">
+        <div class="card-head">
+          <p class="eyebrow">Сценарий 3</p>
+          <h2>Replay</h2>
+          <p class="small">Повторная отправка старого пакета с тем же Nonce отвергается.</p>
+        </div>
+        <div class="sequence" data-sequence="replay">
+          <div class="node" data-actor="A">A<br><span>Sender</span></div>
+          <div class="flow"></div>
+          <div class="node" data-actor="M">M<br><span>MitM</span></div>
+          <div class="flow"></div>
+          <div class="node" data-actor="B">B<br><span>Receiver</span></div>
+        </div>
+        <div class="card-actions">
+          <button class="primary" data-action="run" data-target="replay">Запустить</button>
+        </div>
+        <div class="log" id="log-replay"></div>
+      </article>
+
+      <article class="card" data-scenario="interactive">
+        <div class="card-head">
+          <p class="eyebrow">Сценарий 4</p>
+          <h2>Интерактивный MitM</h2>
+          <p class="small">Подмени сообщение или попробуй отправить повтор — сыграй роль атакующего.</p>
+        </div>
+        <div class="sequence" data-sequence="interactive">
+          <div class="node" data-actor="A">A<br><span>Sender</span></div>
+          <div class="flow"></div>
+          <div class="node" data-actor="M">Вы<br><span>MitM</span></div>
+          <div class="flow"></div>
+          <div class="node" data-actor="B">B<br><span>Receiver</span></div>
+        </div>
+        <div class="interactive-form">
+          <label>
+            <span>Сообщение отправителя</span>
+            <input type="text" id="origMessage" value="Command: Sync backup">
+          </label>
+          <label>
+            <span>Подменённое сообщение (опционально)</span>
+            <input type="text" id="tamperMessage" value="Command: Delete audit log">
+          </label>
+          <label class="inline">
+            <input type="checkbox" id="tamperToggle" checked>
+            <span>Подменить сообщение и оставить старый MAC</span>
+          </label>
+        </div>
+        <div class="card-actions">
+          <button class="primary" data-action="run" data-target="interactive">Запустить</button>
+        </div>
+        <div class="log" id="log-interactive"></div>
+      </article>
+    </section>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
